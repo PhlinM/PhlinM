@@ -1,0 +1,49 @@
+// This script is very fragile. If any of the Elements on NOAH compendium id's or class names change then they break
+// Needs some extra saftey check put in place.
+
+function searchFor(searchterm) {
+    // Searches NOAH for the given searchTerm
+    
+    // Enters searchterm into search bar
+    document.getElementById("iosinputsearchrow0").value = searchterm;
+    
+    // call a search script that's in the in the file
+    doSearch(2)
+}
+
+function pickTopResult() {
+    // Clicks on the top results title, to redirect it page
+    document.getElementsByClassName("iossearchresulttitle")[1].children[0].click();
+}
+
+function scrapeTheData() {
+    // Looks for classes in the dictionary below, and returns the dictionary with innerText of said class
+    var dict = {
+        "Therapeutic Indication:" : "nc_therapeutic_indication",
+        "Active Ingredient:"      : "nc_active_ingredient",
+        "Product:"                : "nc_product",
+        "Product Index:"          : "nc_product_index",
+        "Withdrawl Cattle Milk:"  : "nc_withdrawal_cattlemilk",
+        "Withdrawl Cattle Meat:"  : "nc_withdrawal_cattlemeat",
+        "Withdrawl Sheep Meat:"   : "nc_withdrawal_sheepmeat",
+        "Withdrawl Notes:"        : "nc_withdrawal_notes"
+    };
+
+    for(var key in dict) {
+        // Finds all elements with the class name equal to key
+        var elems = document.getElementsByClassName(dict[key])
+        // Checks that there is at least one
+        if (elems.length > 0) {
+            // Gets all the child nodes
+            var elem = elems[0]
+            // Removes first child element, the label
+            elem.removeChild(elem.firstElementChild);
+            // Retrieves all the inner text
+            dict[key] = elem.innerText;
+        } else {
+            // Deletes the dictionary entry for key
+            delete dict[key]
+        }
+    }
+    return dict
+}
